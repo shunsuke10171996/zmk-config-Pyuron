@@ -9,7 +9,7 @@ config ZMK_SPLIT
 config ZMK_POINTING
     default y
 
-config PAW3222
+config IQS7211E
     default y
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
@@ -27,7 +27,7 @@ config ZMK_SPLIT
 config ZMK_POINTING
     default y
 
-config PAW3222
+config IQS7211E
     default y
 
 endif

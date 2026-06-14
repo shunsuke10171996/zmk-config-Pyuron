@@ -13,7 +13,7 @@ manifest:
       remote: zmkfirmware
       revision: main
       import: app/west.yml
-    - name: zmk-driver-paw3222
+    - name: zmk-driver-iqs7211e
       remote: sekigon-gonnoc
       revision: main
     - name: zmk-rgbled-widget
