@@ -24,22 +24,68 @@ split_inputs {
       };
     };
 
+    /* 各軸の入力を制御するためのスケーラー定義 */
+    x_scaler: x_scaler {
+        compatible = "zmk,input-processor-scaler";
+        #input-processor-cells = <2>;
+        type = <0x02>; /* EV_REL */
+        codes = <0x00 0x06>; /* X軸 / 横スクロール */
+    };
+
+    y_scaler: y_scaler {
+        compatible = "zmk,input-processor-scaler";
+        #input-processor-cells = <2>;
+        type = <0x02>; /* EV_REL */
+        codes = <0x01 0x08>; /* Y軸 / 縦スクロール */
+    };
+
     trackball_listener_L: trackball_listener_L {
-      compatible = "zmk,input-listener";
-      status = "disabled";
-      device = <&trackball_split_L>;
+        compatible = "zmk,input-listener";
+        status = "disabled";
+        device = <&trackball_split_L>;
+
+        /* デフォルト：上下方向のみ (X軸方向の入力を 0倍にする) */
         input-processors =
             <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
-            <&zip_xy_scaler 1 16>,
-            <&zip_scroll_scaler 1 5>,
-            <&zip_xy_to_scroll_mapper>;
+            <&x_scaler 0 1>,
+            <&zip_xy_to_scroll_mapper>,
+            <&zip_scroll_scaler 1 4>;
+
+        scroller {
+            layers = <3>;
+            /* レイヤー3：左右方向のみ (Y軸方向の入力を 0倍にする) */
+            input-processors =
+                <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>,
+                <&y_scaler 0 1>,
+                <&zip_xy_to_scroll_mapper>,
+                <&zip_scroll_scaler 1 2>;
+        };
     };
 
     trackball_listener_R: trackball_listener_R {
-      compatible = "zmk,input-listener";
-      status = "disabled";
+        compatible = "zmk,input-listener";
+        status = "disabled";
+
+        /* デフォルト: カーソル移動。ボール操作時に一時的にレイヤー1を有効化 */
         input-processors =
-            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>;
+            <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>,
+            <&zip_temp_layer 1 640>;
+
+        fast_cursor {
+            layers = <2>;
+            input-processors =
+                <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>,
+                <&zip_xy_scaler 2 1>,
+                <&zip_temp_layer 1 640>;
+        };
+
+        scroller {
+            layers = <3>;
+            input-processors =
+                <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>,
+                <&zip_xy_to_scroll_mapper>,
+                <&zip_scroll_scaler 1 4>;
+        };
     };
 
     default_transform: keymap_transform_0 {
