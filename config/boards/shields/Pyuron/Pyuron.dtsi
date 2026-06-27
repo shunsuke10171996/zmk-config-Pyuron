@@ -82,7 +82,7 @@ split_inputs {
         scroller {
             layers = <3>;
             input-processors =
-                <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_Y_INVERT)>,
+                <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)>,
                 <&zip_xy_to_scroll_mapper>,
                 <&zip_scroll_scaler 1 4>;
         };
